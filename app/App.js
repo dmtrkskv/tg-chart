@@ -18,10 +18,7 @@ let pairs = [
 
 export default class App {
     constructor(appId) {
-        this.setScrollWidth();
-
         this.isDesktop = !('ontouchstart' in window);
-        this.savedInnerWidth = window.innerWidth;
 
         this.html = document.getElementById(appId);
         this.html.setAttribute("id", "app");
@@ -42,7 +39,8 @@ export default class App {
         this.switchTheme();
         this.themeSwitcherHTML.onclick = this.switchTheme.bind(this);
 
-        window.onresize = this.handleResize.bind(this);
+        let resizeEvent = this.isDesktop ? "onresize" : "onorientationchange";
+        window[resizeEvent] = this.handleResize.bind(this);
     }
 
     switchTheme() {
@@ -70,29 +68,14 @@ export default class App {
 
     handleResize() {
         if (!this.isDesktop) {
-            if (window.innerWidth === this.savedInnerWidth) {
-                return;
-            } else {
-                this.savedInnerWidth = window.innerWidth;
-            }
+            setTimeout(update.bind(this), 200);
+        } else {
+            update.call(this);
         }
-        this.boxes.forEach(item => item.onResize());
-    }
 
-    setScrollWidth() {
-        let div = document.createElement('div');
-
-        div.style.overflowY = 'scroll';
-        div.style.width = '50px';
-        div.style.height = '50px';
-
-        div.style.visibility = 'hidden';
-
-        document.body.appendChild(div);
-        let scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
-
-        window.scrollWidth = scrollWidth;
+        function update() {
+            this.boxes.forEach(item => item.onResize());
+        }
     }
 
 }

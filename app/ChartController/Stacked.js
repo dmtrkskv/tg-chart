@@ -153,7 +153,6 @@ export class Stacked extends StackedBase {
         let i = this.highlightedIndex;
         ctx.beginPath();
 
-        //посылать аргументом?
         let y = this.height - this.highlightedAmount *
             this.height / this.axisYmax.curV +
             this.marginTop;
@@ -173,7 +172,6 @@ export class Stacked extends StackedBase {
 
 }
 
-// буду делать наследование с немного разным функционалом
 export class StackedL extends StackedBase {
     constructor(ctx, width, height, marginTop, data) {
         super(ctx, width, height, marginTop, data);

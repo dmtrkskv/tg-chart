@@ -110,7 +110,6 @@ export default class Base {
     }
 
 
-    //всегда отнимаем to - xFrom
     initAppearAnimation(xFrom, dur) {
         this.updateDT();
         this.dur = dur;

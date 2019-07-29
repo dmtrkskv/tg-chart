@@ -26,8 +26,6 @@ export default class ItemBase {
         this.animationHappens = false;
     }
 
-    //синхронизация не треубуется, можно не заморачиваться
-    //и анимировать локально
     initVisibilityAnimation(dir, dur) {
         cancelAnimationFrame(this.requestID);
 

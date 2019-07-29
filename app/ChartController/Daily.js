@@ -145,7 +145,6 @@ export class Daily extends DailyBase {
 
 }
 
-// буду делать наследование с немного другим функционалом
 export class DailyL extends DailyBase {
     constructor(ctx, width, height, marginTop, data) {
         super(ctx, width, height, marginTop, data);

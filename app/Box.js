@@ -450,7 +450,7 @@ export default class Box {
     }
 
     setSizes() {
-        let screenWidth = window.innerWidth - window.scrollWidth;
+        let screenWidth = document.documentElement.clientWidth;
         let sidePadding = screenWidth * .03;
 
         let h = document.documentElement.clientHeight;

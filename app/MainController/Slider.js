@@ -15,7 +15,7 @@ export default class Slider {
 
         this.upper = upper;
 
-        this.liveDur = 300;
+        this.liveDur = 200;
 
         this.events = ('ontouchstart' in window) ?
             {
@@ -121,7 +121,7 @@ export default class Slider {
             if (this.isLive) {
                 if (!this.animationHappens &&
                     Math.abs(newTumblerLeft - this.tumblerStart) >=
-                    this.minTumblerWidth / 2) {
+                    this.minTumblerWidth / 10) {
                     let res = this.calcAnimOffset(newTumblerLeft, this.tumblerWidth);
                     this.initAnimateTumbler(res[0], res[1]);
                 }
@@ -174,7 +174,7 @@ export default class Slider {
             if (this.isLive) {
                 if (!this.animationHappens &&
                     Math.abs(newTumblerWidth - this.tumblerWidth) >=
-                    this.minTumblerWidth / 2) {
+                    this.minTumblerWidth / 10) {
                     let res = this.calcAnimOffset(newTumblerLeft, newTumblerWidth);
                     this.initAnimateTumbler(res[0], res[1]);
                 } newTumblerWidth, this.minTumblerWidth

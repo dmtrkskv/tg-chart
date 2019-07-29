@@ -1,5 +1,3 @@
-//{color: ..., opacity:... }
-//getTransparentColor(...) -> hexDec(...)
 let themes = {
     day: {
         background: "white",

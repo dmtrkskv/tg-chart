@@ -118,13 +118,8 @@ export class Lines extends Base {
         this.drawPopup(index, dockets);
     }
 
-    // функция должна взять старый сохраненный X0, по индексу вычислить новый X, 
-    // произвести анимацию от X0 к X на каждом шаге отрисовки, заставляя линию перерисовываться
-
-
 }
 
-// буду делать наследование с немного разным функционалом
 export class LinesL extends Base {
     constructor(ctx, width, height, marginTop, data) {
         super(ctx, width, height, marginTop, data);

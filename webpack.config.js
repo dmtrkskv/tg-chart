@@ -1,10 +1,9 @@
-// var path = require('path');
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 module.exports = {
-    devtool: 'inline-source-map',
+    devtool: NODE_ENV === "development" ? 'inline-source-map' : false,
     entry: "./app/index.js",
     output: {
         filename: "bundle.js"
-    },
-    mode: 'development'
+    }
 };
