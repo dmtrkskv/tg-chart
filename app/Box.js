@@ -69,7 +69,7 @@ export default class Box {
         }, 100);
 
         let path = folder && this.typeIndex != 5 ? `${this.typeIndex}/${folder}/${item}` : this.typeIndex;
-        return fetch(`http://a0243986.xsph.ru/getTelechartData/${path}`)
+        return fetch(`/getTelechartData/${path}`)
             .then(
                 response => {
                     clearTimeout(timer);
