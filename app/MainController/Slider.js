@@ -110,15 +110,16 @@ export default class Slider {
             let newTumblerLeft = offsetX - shiftX;
 
             if (this.isLive) {
-                let distance = Math.abs(offsetX - this.tumblerStart);
-                this.updateLiveSliderTreshold(distance);
+                if (!this.animationHappens) {
+                    let distance = Math.abs(offsetX - this.tumblerStart);
+                    this.updateLiveSliderTreshold(distance);
 
-                if (!this.animationHappens &&
-                    Math.abs(newTumblerLeft - this.tumblerStart) >=
-                    this.threshold) {
-                    newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
-                    constraint.call(this);
-                    this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
+                    if (Math.abs(newTumblerLeft - this.tumblerStart) >=
+                        this.threshold) {
+                        newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
+                        constraint.call(this);
+                        this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
+                    }
                 }
                 return;
             }
@@ -165,21 +166,22 @@ export default class Slider {
             }
 
             if (this.isLive) {
-                let distance;
-                if (side === "r") {
-                    distance = Math.abs(offsetX - (this.tumblerStart + this.tumblerWidth));
-                } else {
-                    distance = Math.abs(offsetX - this.tumblerStart);
-                }
-                this.updateLiveSliderTreshold(distance);
+                if (!this.animationHappens) {
+                    let distance;
+                    if (side === "r") {
+                        distance = Math.abs(offsetX - (this.tumblerStart + this.tumblerWidth));
+                    } else {
+                        distance = Math.abs(offsetX - this.tumblerStart);
+                    }
+                    this.updateLiveSliderTreshold(distance);
 
-                if (!this.animationHappens &&
-                    Math.abs(newTumblerWidth - this.tumblerWidth) >=
-                    this.threshold) {
-                    newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
-                    newTumblerWidth = this.calcAnimOffset("width", newTumblerWidth);
-                    constraint.call(this);
-                    this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
+                    if (Math.abs(newTumblerWidth - this.tumblerWidth) >=
+                        this.threshold) {
+                        newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
+                        newTumblerWidth = this.calcAnimOffset("width", newTumblerWidth);
+                        constraint.call(this);
+                        this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
+                    }
                 }
                 return;
             }

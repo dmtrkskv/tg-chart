@@ -281,7 +281,6 @@ export default class Box {
             }
 
             //новые контроллеры
-
             let ctx = this.upperHTML.getContext('2d');
             this.upper = new Upper(
                 upperChartType, ctx, w, uH, this.sliderK, this.data, tS, tW,
@@ -361,12 +360,12 @@ export default class Box {
     }
 
     buildCheckBoxes() {
-        this.checks = new Checks(this.html, this.data,
+        this.checksBlock = new Checks(this.html, this.data,
             this.updateChartChecks.bind(this));
     }
 
     removeCheckBoxes() {
-        this.checks.clear();
+        this.checksBlock.clear();
     }
 
     initCanvases() {
@@ -490,14 +489,14 @@ export default class Box {
         let cBT = hH + uH + lH, bH = cBT;
 
         if (this.types[0][0] === "daily") {
-            if (this.checks) {
-                this.checks.html.style.top = cBT - lH;
+            if (this.checksBlock) {
+                this.checksBlock.html.style.top = cBT - lH;
             }
             bH += lH;
         } else {
-            if (this.checks) {
-                this.checks.html.style.top = cBT;
-                bH += this.checks.html.offsetHeight;
+            if (this.checksBlock) {
+                this.checksBlock.html.style.top = cBT;
+                bH += this.checksBlock.html.offsetHeight;
             }
         }
         this.html.style.height = bH;

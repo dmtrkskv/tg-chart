@@ -93,7 +93,7 @@ export class Lines extends Base {
     }
 
     highlightItem(x, y, coordsX, scaleX, leftBoundIndex) {
-        this.focusX = x; //зачем?
+        this.focusX = x; 
         this.focusY = y;
 
         this.isHightlight = true;
@@ -109,7 +109,6 @@ export class Lines extends Base {
                     value: this.prepareValue(this.data.valuesY[i][index + leftBoundIndex]),
                 });
             } else {
-                //не забыть
                 accum.push({ name: "", value: "", });
             }
             return accum;

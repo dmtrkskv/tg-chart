@@ -75,16 +75,18 @@ export default class Upper extends Base {
         this.markings = [];
 
         if (markingNumber !== 0) {
+            let staticVisArr = [true, false];
             for (let i = 0; i < markingNumber; i++) {
                 let vis = 1, color;
                 if (type === "lines2Y") {
                     color = this.data.colors[i];
                     vis = Number(this.chartController.checks[i]);
+                    vis === 0 && (staticVisArr[1] = true);
                 }
                 this.markings.push(
                     new Marking(
                         this.ctx, this.width, this.chartHeight, this.chartMarginTop,
-                        1, 0, !!i, vis, color
+                        1, 0, !!i, vis, color, staticVisArr[i]
                     )
                 );
             }

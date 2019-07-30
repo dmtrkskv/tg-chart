@@ -83,7 +83,7 @@ class Line {
 export default class MarkingController {
     constructor(ctx, width, height, marginTop,
         max = 1, min = 0,
-        rightSide = false, visibility, labelColor) {
+        rightSide = false, visibility, labelColor, staticVis) {
 
         this.linesNumber = 5;
 
@@ -96,7 +96,7 @@ export default class MarkingController {
 
         this.maxLineOpacity = .1;
         this.lineOpacity = this.maxLineOpacity;
-        this.staticVisibility = !rightSide;
+        this.staticVisibility = staticVis;
 
         this.visibility = visibility;
         this.rightSide = rightSide;

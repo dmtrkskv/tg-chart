@@ -146,7 +146,6 @@ export class Stacked extends StackedBase {
         this.drawPopup(index, dockets);
     }
 
-    //no rep!!! но можно сделать, чтобы повторялось, если отправлять аргументом y ?
     drawMask(coordsX, scaleX) {
         let ctx = this.ctx;
 
