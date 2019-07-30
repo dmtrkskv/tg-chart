@@ -105,29 +105,37 @@ export default class Slider {
     handleTumblerMove(shiftX) {
         document[this.events.move] = e => {
             let x = this.events.isDesktop ? e.clientX : e.changedTouches[0].clientX;
-            let offsetLeft = this.html.getBoundingClientRect().left;
-            let offsetX = x - offsetLeft;
+            let boxOffsetLeft = this.html.getBoundingClientRect().left;
+            let offsetX = x - boxOffsetLeft;
             let newTumblerLeft = offsetX - shiftX;
 
-            let space = this.width - this.tumblerWidth;
-
-            if (newTumblerLeft < 0) {
-                newTumblerLeft = 0;
-            } else if (newTumblerLeft > space) {
-                newTumblerLeft = space;
-            }
-
-            //дублируется
             if (this.isLive) {
+                let distance = Math.abs(offsetX - this.tumblerStart);
+                this.updateLiveSliderTreshold(distance);
+
                 if (!this.animationHappens &&
                     Math.abs(newTumblerLeft - this.tumblerStart) >=
-                    this.minTumblerWidth / 10) {
-                    let res = this.calcAnimOffset(newTumblerLeft, this.tumblerWidth);
-                    this.initAnimateTumbler(res[0], res[1]);
+                    this.threshold) {
+                    newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
+                    constraint.call(this);
+                    this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
                 }
-            } else {
-                this.upper.onTumblerUpdate(newTumblerLeft, this.tumblerWidth, true);
-                this.update(newTumblerLeft, this.tumblerWidth);
+                return;
+            }
+
+            constraint.call(this);
+
+            this.upper.onTumblerUpdate(newTumblerLeft, this.tumblerWidth, true);
+            this.update(newTumblerLeft, this.tumblerWidth);
+
+            function constraint() {
+                let space = this.width - this.tumblerWidth;
+                if (newTumblerLeft < 0) {
+                    newTumblerLeft = 0;
+                } else if (newTumblerLeft > space) {
+                    newTumblerLeft = space;
+                }
+                return newTumblerLeft;
             }
         }
     }
@@ -150,39 +158,66 @@ export default class Slider {
 
             if (side === "r") {
                 newTumblerWidth = tumblerWidth0 + offset;
-                let newMarginRight = newTumblerWidth + tumblerLeft0;
-                newMarginRight > this.width && (newTumblerWidth = this.width - tumblerLeft0);
                 newTumblerLeft = tumblerLeft0;
             } else {
                 newTumblerWidth = tumblerWidth0 - offset;
                 newTumblerLeft = this.width - (marginRight0 + newTumblerWidth);
-
-                if (newTumblerLeft < 0) {
-                    newTumblerWidth = this.width - marginRight0;
-                    newTumblerLeft = 0;
-                }
-            }
-
-            if (newTumblerWidth < this.minTumblerWidth) {
-                newTumblerWidth = this.minTumblerWidth;
-                side === "l" &&
-                    (newTumblerLeft = this.width - this.minTumblerWidth - marginRight0);
-            } else if (newTumblerWidth > this.width) {
-                newTumblerWidth = this.width;
             }
 
             if (this.isLive) {
+                let distance;
+                if (side === "r") {
+                    distance = Math.abs(offsetX - (this.tumblerStart + this.tumblerWidth));
+                } else {
+                    distance = Math.abs(offsetX - this.tumblerStart);
+                }
+                this.updateLiveSliderTreshold(distance);
+
                 if (!this.animationHappens &&
                     Math.abs(newTumblerWidth - this.tumblerWidth) >=
-                    this.minTumblerWidth / 10) {
-                    let res = this.calcAnimOffset(newTumblerLeft, newTumblerWidth);
-                    this.initAnimateTumbler(res[0], res[1]);
-                } newTumblerWidth, this.minTumblerWidth
-            } else {
-                this.upper.onTumblerUpdate(newTumblerLeft, newTumblerWidth, true);
-                this.update(newTumblerLeft, newTumblerWidth);
+                    this.threshold) {
+                    newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
+                    newTumblerWidth = this.calcAnimOffset("width", newTumblerWidth);
+                    constraint.call(this);
+                    this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
+                }
+                return;
+            }
+
+            constraint.call(this);
+
+            this.upper.onTumblerUpdate(newTumblerLeft, newTumblerWidth, true);
+            this.update(newTumblerLeft, newTumblerWidth);
+
+            function constraint() {
+                if (side === "r") {
+                    let newMarginRight = newTumblerWidth + tumblerLeft0;
+                    newMarginRight > this.width && (newTumblerWidth = this.width - tumblerLeft0);
+                } else {
+                    if (newTumblerLeft < 0) {
+                        newTumblerWidth = this.width - marginRight0;
+                        newTumblerLeft = 0;
+                    }
+                }
+                if (newTumblerWidth < this.minTumblerWidth) {
+                    newTumblerWidth = this.minTumblerWidth;
+                    side === "l" &&
+                        (newTumblerLeft = this.width - this.minTumblerWidth - marginRight0);
+                } else if (newTumblerWidth > this.width) {
+                    newTumblerWidth = this.width;
+                }
             }
         }
+    }
+
+    updateLiveSliderTreshold(distance) {
+        let sensitivityK;
+        if (distance > this.minTumblerWidth * .75) {
+            sensitivityK = 1;
+        } else {
+            sensitivityK = .5;
+        }
+        this.threshold = sensitivityK * this.minTumblerWidth;
     }
 
     update(tumblerStart, tumblerWidth) {
@@ -192,18 +227,24 @@ export default class Slider {
         this.draw();
     }
 
-    calcAnimOffset(tumblerStart, tumblerWidth) {
-        let dif0;
+    calcAnimOffset(param, value) {
+        let dif0, newValue;
 
-        dif0 = tumblerStart - this.tumblerStart;
-        dif0 !== 0 && (tumblerStart = this.tumblerStart +
-            this.minTumblerWidth * Math.round(dif0 / this.minTumblerWidth));
+        if (param === "left") {
+            let tumblerStart = value;
+            dif0 = tumblerStart - this.tumblerStart;
+            dif0 !== 0 && (newValue = this.tumblerStart +
+                this.minTumblerWidth * Math.round(dif0 / this.threshold));
+        } else if (param === "width") {
+            let tumblerWidth = value;
+            dif0 = tumblerWidth - this.tumblerWidth;
+            dif0 !== 0 && (newValue = this.tumblerWidth +
+                this.minTumblerWidth * Math.round(dif0 / this.threshold));
+        }
 
-        dif0 = tumblerWidth - this.tumblerWidth;
-        dif0 !== 0 && (tumblerWidth = this.tumblerWidth +
-            this.minTumblerWidth * Math.round(dif0 / this.minTumblerWidth));
+        if (newValue === undefined) return value;
 
-        return [tumblerStart, tumblerWidth];
+        return newValue;
     }
 
     initAnimateTumbler(newStart, newTumblerWidth, dur = this.liveDur, resolve) {
