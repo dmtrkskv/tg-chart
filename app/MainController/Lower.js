@@ -43,8 +43,8 @@ export default class Lower extends Base {
     onTumblerUpdate(tumblerStart, tumblerWidth) {
         super.onTumblerUpdate(tumblerStart, tumblerWidth);
 
-        this.leftBoundIndex -= 2;
-        this.rightBoundIndex += 2;
+        this.leftBoundIndex = this.fittedLeftBoundIndex - 2;
+        this.rightBoundIndex = this.fittedRightBoundIndex + 2;
 
         let n = this.data.valuesY[0].length - 1;
         this.rightBoundIndex >= n && (this.rightBoundIndex = n);

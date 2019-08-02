@@ -117,8 +117,8 @@ export default class Slider {
                     if (Math.abs(newTumblerLeft - this.tumblerStart) >=
                         this.threshold) {
                         newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
-                        constraint.call(this);
-                        this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
+                        const pushing = constraint.call(this);
+                        pushing || this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
                     }
                 }
                 return;
@@ -130,13 +130,17 @@ export default class Slider {
             this.update(newTumblerLeft, this.tumblerWidth);
 
             function constraint() {
+                let pushing = false;
+
                 let space = this.width - this.tumblerWidth;
                 if (newTumblerLeft < 0) {
+                    pushing = true;
                     newTumblerLeft = 0;
                 } else if (newTumblerLeft > space) {
+                    pushing = true;
                     newTumblerLeft = space;
                 }
-                return newTumblerLeft;
+                return pushing;
             }
         }
     }
@@ -179,8 +183,8 @@ export default class Slider {
                         this.threshold) {
                         newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
                         newTumblerWidth = this.calcAnimOffset("width", newTumblerWidth);
-                        constraint.call(this);
-                        this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
+                        const pushing = constraint.call(this);
+                        pushing || this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
                     }
                 }
                 return;
@@ -192,22 +196,32 @@ export default class Slider {
             this.update(newTumblerLeft, newTumblerWidth);
 
             function constraint() {
+                let pushing = false;
+
                 if (side === "r") {
                     let newMarginRight = newTumblerWidth + tumblerLeft0;
-                    newMarginRight > this.width && (newTumblerWidth = this.width - tumblerLeft0);
+                    if (newMarginRight > this.width) {
+                        pushing = true;
+                        newTumblerWidth = this.width - tumblerLeft0;
+                    }
                 } else {
                     if (newTumblerLeft < 0) {
+                        pushing = true;
                         newTumblerWidth = this.width - marginRight0;
                         newTumblerLeft = 0;
                     }
                 }
                 if (newTumblerWidth < this.minTumblerWidth) {
+                    pushing = true;
                     newTumblerWidth = this.minTumblerWidth;
                     side === "l" &&
                         (newTumblerLeft = this.width - this.minTumblerWidth - marginRight0);
                 } else if (newTumblerWidth > this.width) {
+                    pushing = true;
                     newTumblerWidth = this.width;
                 }
+
+                return pushing;
             }
         }
     }

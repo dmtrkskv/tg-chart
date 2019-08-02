@@ -232,8 +232,8 @@ export default class Upper extends Base {
         let rightSideMargin = 2,
             leftSideMargin = Math.floor(datesBarLabelWidth / this.scaleX);
         leftSideMargin < 2 && (leftSideMargin = 2);
-        this.leftBoundIndex -= leftSideMargin;
-        this.rightBoundIndex += rightSideMargin;
+        this.leftBoundIndex = this.fittedLeftBoundIndex - leftSideMargin;
+        this.rightBoundIndex = this.fittedRightBoundIndex + rightSideMargin;
 
         let n = this.data.valuesY[0].length - 1;
         this.rightBoundIndex >= n && (this.rightBoundIndex = n);

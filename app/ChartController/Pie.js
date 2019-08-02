@@ -162,7 +162,7 @@ export class Pie {
     draw(shouldUpdate) {
         if (shouldUpdate) {
             let total = this.calcTotals();
-            this.items.reduce((startAngle, item, i) =>
+            this.items.reduce((startAngle, item, i) => 
                 item.update(startAngle, this.pieSlicesTotal[i], total),
                 0);
         }

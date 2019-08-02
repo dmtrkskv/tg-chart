@@ -37,15 +37,15 @@ export default class Base {
         let valuesNumber = this.data.valuesY[0].length,
             n = valuesNumber - 1;
 
-        this.leftBoundIndex = Math.ceil(n * tumblerStart / this.sliderWidth);
-        this.rightBoundIndex = Math.floor((n * (tumblerStart + tumblerWidth)) / this.sliderWidth);
-        this.rightBoundIndex < this.leftBoundIndex && (this.leftBoundIndex = this.rightBoundIndex);
+        this.fittedLeftBoundIndex = Math.ceil(n * tumblerStart / this.sliderWidth);
+        this.fittedRightBoundIndex = Math.floor((n * (tumblerStart + tumblerWidth)) / this.sliderWidth);
+        this.fittedRightBoundIndex < this.fittedLeftBoundIndex && (this.fittedLeftBoundIndex = this.fittedRightBoundIndex);
 
         this.transitionHappens === true ||
-            this.chartController.updateVerticalBounds(this.leftBoundIndex, this.rightBoundIndex);
+            this.chartController.updateVerticalBounds(this.fittedLeftBoundIndex, this.fittedRightBoundIndex);
 
         flagHeaderUpdate && this.updateHeaderDate(this.defineHeaderDateLabel(
-            this.leftBoundIndex, this.rightBoundIndex), this.zoomed);
+            this.fittedLeftBoundIndex, this.fittedRightBoundIndex), this.zoomed);
 
         this.scaleX = (this.width / valuesNumber) * (this.sliderWidth / tumblerWidth);
     }
@@ -85,7 +85,7 @@ export default class Base {
             }
         }
         this.chartController.animateVisibility(index, state);
-        this.chartController.updateVerticalBounds(this.leftBoundIndex, this.rightBoundIndex, 1);
+        this.chartController.updateVerticalBounds(this.fittedLeftBoundIndex, this.fittedRightBoundIndex, 1);
 
         this.shouldChartsUpdate = true;
         this.animationHappens || this.draw();
