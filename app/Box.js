@@ -29,7 +29,7 @@ export default class Box {
         this.title = title;
 
         this.transDur = 200;
-        this.transitionHappens = false;
+        this.zoomed = false;
 
         this.buildHeader();
         this.buildCanvases();
@@ -151,8 +151,8 @@ export default class Box {
     }
 
     onZoom(zoomObj, day, month, year) {
-        if (this.transitionHappens === true) return;
-        this.transitionHappens = true;
+        if (this.zoomed === true) return;
+        this.zoomed = true;
 
         let range = this.defineZoomRange(zoomObj);
         this.setZoomParams(zoomObj, range);
@@ -172,7 +172,7 @@ export default class Box {
             this.getDataFromServer(folder, item)
                 .then(result => {
                     if (result === null) {
-                        this.transitionHappens = false;
+                        this.zoomed = false;
                         return;
                     }
                     this.data2 = this.data;
@@ -205,7 +205,7 @@ export default class Box {
 
     onZoomOut() {
         if (this.slider.isTorn === true) return; // дожидаемся окончания перехода
-
+        this.zoomed = false;
         this.data = this.data2;
 
         this.headerTitleHTML.querySelector("svg").remove();
@@ -265,7 +265,6 @@ export default class Box {
                 this.types[0][0] === "daily" || this.html.removeChild(disappearingHTML2);
 
                 this.slider.switchInfluence(true, this.upper);
-                this.transitionHappens = false;
             });
 
 

@@ -39,10 +39,6 @@ export default class Item extends ItemBase {
         return this.animationHappens;
     }
 
-    // анимировать нужно только X. Затем каждая линия должна сама понять, какой нужен Y
-    // имея в наличии X и coordsX
-
-
     drawCircleInPoint(x, coordsX) {
         if (this.visibility === 0) return;
 

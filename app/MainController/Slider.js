@@ -117,8 +117,8 @@ export default class Slider {
                     if (Math.abs(newTumblerLeft - this.tumblerStart) >=
                         this.threshold) {
                         newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
-                        const pushing = constraint.call(this);
-                        pushing || this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
+                        constraint.call(this);
+                        this.initAnimateTumbler(newTumblerLeft, this.tumblerWidth);
                     }
                 }
                 return;
@@ -130,17 +130,12 @@ export default class Slider {
             this.update(newTumblerLeft, this.tumblerWidth);
 
             function constraint() {
-                let pushing = false;
-
                 let space = this.width - this.tumblerWidth;
                 if (newTumblerLeft < 0) {
-                    pushing = true;
                     newTumblerLeft = 0;
                 } else if (newTumblerLeft > space) {
-                    pushing = true;
                     newTumblerLeft = space;
                 }
-                return pushing;
             }
         }
     }
@@ -183,8 +178,8 @@ export default class Slider {
                         this.threshold) {
                         newTumblerLeft = this.calcAnimOffset("left", newTumblerLeft);
                         newTumblerWidth = this.calcAnimOffset("width", newTumblerWidth);
-                        const pushing = constraint.call(this);
-                        pushing || this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
+                        constraint.call(this);
+                        this.initAnimateTumbler(newTumblerLeft, newTumblerWidth);
                     }
                 }
                 return;
@@ -196,32 +191,24 @@ export default class Slider {
             this.update(newTumblerLeft, newTumblerWidth);
 
             function constraint() {
-                let pushing = false;
-
                 if (side === "r") {
                     let newMarginRight = newTumblerWidth + tumblerLeft0;
                     if (newMarginRight > this.width) {
-                        pushing = true;
                         newTumblerWidth = this.width - tumblerLeft0;
                     }
                 } else {
                     if (newTumblerLeft < 0) {
-                        pushing = true;
                         newTumblerWidth = this.width - marginRight0;
                         newTumblerLeft = 0;
                     }
                 }
                 if (newTumblerWidth < this.minTumblerWidth) {
-                    pushing = true;
                     newTumblerWidth = this.minTumblerWidth;
                     side === "l" &&
                         (newTumblerLeft = this.width - this.minTumblerWidth - marginRight0);
                 } else if (newTumblerWidth > this.width) {
-                    pushing = true;
                     newTumblerWidth = this.width;
                 }
-
-                return pushing;
             }
         }
     }
@@ -268,13 +255,14 @@ export default class Slider {
         this.dur = dur;
         this.durProgress = 0;
 
-        let dif;
+        let startDif, widthDif;
 
-        dif = newStart - this.tumblerStart;
-        this.animBiasOfStart = dif / dur;
+        startDif = newStart - this.tumblerStart;
+        widthDif = newTumblerWidth - this.tumblerWidth;
+        if (startDif === 0 && widthDif === 0) return;
 
-        dif = newTumblerWidth - this.tumblerWidth;
-        this.animBiasOfTumblerWidth = dif / dur;
+        this.animBiasOfStart = startDif / dur;
+        this.animBiasOfTumblerWidth = widthDif / dur;
 
 
         this.animationHappens = true;
